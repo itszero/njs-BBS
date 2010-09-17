@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>BBS.js</title>
+    <script src="Socket.IO/socket.io.js" type="text/javascript"></script>
+    <script src="JSON.js" type="text/javascript"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script src="TermView/TermView.js" type="text/javascript"></script>    
+    <script src="TermView/TermView.Terminals.ANSI.js" type="text/javascript"></script>    
+    <script src="TermView/TermView.Renderers.Canvas.js" type="text/javascript"></script>    
+    <link href="main.css" rel="stylesheet"/>
+  </head>
+  <body>
+    <div id="termview_container">
+        <div id="termview">
+        </div>
+    </div>
+  
+    <script type="text/javascript">
+var term = new TermView();
+var wantData = false;
+$(function() {
+	
+	io.setPath("/Socket.IO/");
+	var socket = new io.Socket('', {
+		transports: ['websocket', 'htmlfile', 'xhr-multipart', 'xhr-polling'] /* don't use flashsocket ... it acts weird :( */
+	});
+    socket.on('connect', function() { });
+    socket.on('message', function(msg) {
+        if (msg.type == 'data') {
+            term.incomingData(msg.data);
+			if (wantData)
+				console.log(msg.data);
+		}
+    });
+
+    socket.connect();
+	term.setDelegate({
+		send: function(data) {
+			socket.send(data);
+		}
+	});
+});
+    </script>
+  </body>
+</html>

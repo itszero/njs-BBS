@@ -1,0 +1,13 @@
+body {
+    background-color: black;
+}
+
+#termview_container {
+    margin: 0 auto;
+}
+
+#termview {
+    font-size: 24px;
+    font-family: monospace;
+    color: #DDD;
+}
